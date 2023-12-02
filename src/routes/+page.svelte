@@ -14,7 +14,12 @@
 </ul>`;
 	let autofocus = `<!-- Use cautiously! -->
 <input name="q" autofocus />`;
-	let altText = `<img alt="describe the image" />`;
+	let altText = `<img alt="describe the image"></img>`;
+	let button = `<button aria-pressed="true||false">
+	Toggle
+</button>`;
+
+	let buttonPressed = false;
 </script>
 
 <svelte:head>
@@ -61,6 +66,11 @@
 				Although you want your website to respect the accessibility features provided by the
 				operating system. Implement custom keyboard navigation to help users who can't use
 				pointer-based input if navigating your website is unreliable without one.
+			</p>
+			<p>
+				For example, you should be able to scroll with arrow keys on this page, that is default
+				behavior, meaning people will expect this to happen when they press arrow keys. It can be
+				confusing if it is rebinded to some other functionality.
 			</p>
 		</Showcase>
 
@@ -119,5 +129,62 @@
 				underneath the sun.
 			</p>
 		</Showcase>
+		<Showcase title="Avoid Visual-Dependent Elements">
+			<p>
+				Most screen readers do not react when content changes dynamically. Additionally, for toggle
+				buttons such as the one below, do not update the text within the buttons at all.
+			</p>
+			<p>Please never do something like this.</p>
+			<div>
+				<span>
+					<button
+						class="	py-2
+								px-4
+								bg-blue-500
+								text-white
+								rounded-full
+								hover:bg-blue-700
+								active:bg-blue-900
+								focus:outline-none"
+						on:click={() => {
+							buttonPressed = !buttonPressed;
+						}}
+						aria-pressed={buttonPressed}>Toggled {buttonPressed}</button
+					>
+					{#if buttonPressed}
+						✅
+					{:else}
+						❌
+					{/if}
+				</span>
+			</div>
+			<p>At the very least specify an aria attribute to indicate the state.</p>
+			<HighlightAuto code={button} let:highlighted>
+				<LineNumbers {highlighted} wrapLines />
+			</HighlightAuto>
+		</Showcase>
+		<Showcase title="Text Readability" reference="https://github.com/antijingoist/opendyslexic">
+			<p>
+				Ensure that visitors to your site can read everything with ease. Choose a font with
+				readability in mind, although most default fonts provided by browsers can fulfill that role.
+			</p>
+			<p>
+				Certain fonts may help users with dyslexia, such as OpenDyslexic under the SIL-OFL license.
+			</p>
+			<p id="opendyslexic">The quick brown fox jumps over the lazy dog</p>
+		</Showcase>
 	</div>
 </div>
+
+<style>
+	@font-face {
+		font-family: 'OpenDyslexic';
+		font-style: normal;
+		src: local('OpenDyslexic-Regular'), local('opendyslexic-regular'), local('OpenDyslexic Regular'),
+			local('opendyslexic regular'), url('/fonts/OpenDyslexic/OpenDyslexic-Regular.otf');
+	}
+
+	#opendyslexic {
+		font-family: 'OpenDyslexic';
+	}
+</style>
